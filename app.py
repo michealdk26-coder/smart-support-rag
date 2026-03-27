@@ -84,22 +84,29 @@ Answer:"""
 def index():
     return render_template("index.html")
 
+
 @app.route("/upload", methods=["POST"])
 def upload():
     global document_chunks
     file = request.files["file"]
     filename = file.filename
-    file.save(filename)
 
+    # Read file directly without saving
     if filename.endswith(".pdf"):
-        text = load_pdf(filename)
+        import io
+        file_bytes = io.BytesIO(file.read())
+        reader = PyPDF2.PdfReader(file_bytes)
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text()
     elif filename.endswith(".txt"):
-        text = load_txt(filename)
+        text = file.read().decode("utf-8")
     else:
-        return jsonify({"error": "Unsupported file type"})
+        return jsonify({"error": "Unsupported file type! Please use PDF or TXT"})
 
     document_chunks = split_into_chunks(text)
     return jsonify({"message": f"✅ File loaded successfully! Split into {len(document_chunks)} chunks"})
+
 
 @app.route("/ask", methods=["POST"])
 def ask():
