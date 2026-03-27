@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Support Knowledge Base</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #1e293b;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #6366f1;
+        }
+
+        header h1 {
+            color: #6366f1;
+            font-size: 28px;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .upload-section {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #334155;
+        }
+
+        .upload-section h2 {
+            color: #6366f1;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .upload-area {
+            border: 2px dashed #6366f1;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            background: #263348;
+        }
+
+        .upload-area p {
+            color: #94a3b8;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #4f46e5;
+        }
+
+        .status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .status.success {
+            background: #064e3b;
+            color: #6ee7b7;
+            display: block;
+        }
+
+        .status.error {
+            background: #7f1d1d;
+            color: #fca5a5;
+            display: block;
+        }
+
+        .chat-section {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #334155;
+        }
+
+        .chat-section h2 {
+            color: #6366f1;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .chat-box {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 20px;
+            height: 350px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message.user span {
+            background: #6366f1;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 12px 12px 0 12px;
+            display: inline-block;
+            max-width: 80%;
+            text-align: left;
+        }
+
+        .message.bot span {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 10px 15px;
+            border-radius: 12px 12px 12px 0;
+            display: inline-block;
+            max-width: 80%;
+            border: 1px solid #334155;
+        }
+
+        .message .label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-area input {
+            flex: 1;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .input-area input:focus {
+            border-color: #6366f1;
+        }
+
+        .input-area button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background 0.3s;
+        }
+
+        .input-area button:hover {
+            background: #4f46e5;
+        }
+
+        .thinking {
+            color: #64748b;
+            font-style: italic;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📚 Smart Support Knowledge Base</h1>
+        <p>Upload a PDF or TXT file and ask questions about it</p>
+    </header>
+
+    <div class="container">
+
+        
+        <div class="upload-section">
+            <h2>📂 Upload Your Document</h2>
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <p>🗂️ Click to select a PDF or TXT file</p>
+                <p id="fileName">No file selected</p>
+            </div>
+            <input type="file" id="fileInput" accept=".pdf,.txt" onchange="updateFileName()">
+            <button class="upload-btn" onclick="uploadFile()">Upload & Process File</button>
+            <div class="status" id="uploadStatus"></div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <h2>💬 Ask Questions</h2>
+            <div class="chat-box" id="chatBox">
+                <div class="message bot">
+                    <div class="label">🤖 Assistant</div>
+                    <span>Hello! Please upload a PDF or TXT file first, then ask me anything about it!</span>
+                </div>
+            </div>
+            <div class="input-area">
+                <input type="text" id="questionInput" placeholder="Ask a question about your document..." onkeypress="handleKey(event)">
+                <button onclick="askQuestion()">Ask</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function updateFileName() {
+            const fileInput = document.getElementById('fileInput');
+            const fileName = document.getElementById('fileName');
+            fileName.textContent = fileInput.files[0] ? fileInput.files[0].name : 'No file selected';
+        }
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const status = document.getElementById('uploadStatus');
+
+            if (!fileInput.files[0]) {
+                status.className = 'status error';
+                status.textContent = '❌ Please select a file first!';
+                return;
+            }
+
+            status.className = 'status';
+            status.textContent = '⏳ Processing file...';
+            status.style.display = 'block';
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                status.className = 'status error';
+                status.textContent = '❌ ' + data.error;
+            } else {
+                status.className = 'status success';
+                status.textContent = data.message;
+            }
+        }
+
+        async function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const chatBox = document.getElementById('chatBox');
+            const question = input.value.trim();
+
+            if (!question) return;
+
+            
+            chatBox.innerHTML += `
+                <div class="message user">
+                    <div class="label">You</div>
+                    <span>${question}</span>
+                </div>
+            `;
+
+            
+            chatBox.innerHTML += `
+                <div class="message bot" id="thinking">
+                    <div class="label">🤖 Assistant</div>
+                    <span class="thinking">Thinking...</span>
+                </div>
+            `;
+
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question })
+            });
+
+            const data = await response.json();
+
+           
+            document.getElementById('thinking').remove();
+
+          
+            chatBox.innerHTML += `
+                <div class="message bot">
+                    <div class="label">🤖 Assistant</div>
+                    <span>${formatAnswer(data.answer || data.error)}</span>
+                </div>
+            `;
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+       function formatAnswer(text) {
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/\*/g, '');
+            text = text.replace(/(\d+\.)\s/g, '<br><br><strong>$1</strong> ');
+
+           
+            text = text.replace(/•\s/g, '<br><br>• ');
+            text = text.replace(/[-–]\s/g, '<br><br>• ');
+            text = text.replace(/\n\n/g, '<br><br>');
+            text = text.replace(/\n/g, '<br>');
+            text = text.replace(/^(<br>)+/, '');
+
+            return text;
+        }
+
+        function handleKey(event) {
+            if (event.key === 'Enter') {
+                askQuestion();
+            }
+        }
+    </script>
+
+</body>
+</html>
