@@ -2,8 +2,8 @@
 from flask import Flask, render_template, request, jsonify
 import PyPDF2
 from groq import Groq
-from config import GROQ_API_KEY
 import os
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
 app = Flask(__name__)
 client = Groq(api_key=GROQ_API_KEY)
