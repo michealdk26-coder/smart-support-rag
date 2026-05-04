@@ -105,7 +105,7 @@ def upload():
         return jsonify({"error": "Unsupported file type! Please use PDF or TXT"})
 
     document_chunks = split_into_chunks(text)
-    return jsonify({"message": f"✅ File loaded successfully! Split into {len(document_chunks)} chunks"})
+    return jsonify({"message": f" File loaded successfully! Split into {len(document_chunks)} chunks"})
 
 
 @app.route("/ask", methods=["POST"])
