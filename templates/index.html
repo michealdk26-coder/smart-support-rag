@@ -225,7 +225,7 @@
 <body>
 
     <header>
-        <h1>📚 Smart Support Knowledge Base</h1>
+        <h1> Smart Support Knowledge Base</h1>
         <p>Upload a PDF or TXT file and ask questions about it</p>
     </header>
 
@@ -233,9 +233,9 @@
 
         
         <div class="upload-section">
-            <h2>📂 Upload Your Document</h2>
+            <h2> Upload Your Document</h2>
             <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                <p>🗂️ Click to select a PDF or TXT file</p>
+                <p> Click to select a PDF or TXT file</p>
                 <p id="fileName">No file selected</p>
             </div>
             <input type="file" id="fileInput" accept=".pdf,.txt" onchange="updateFileName()">
@@ -245,10 +245,10 @@
 
         <!-- Chat Section -->
         <div class="chat-section">
-            <h2>💬 Ask Questions</h2>
+            <h2> Ask Questions</h2>
             <div class="chat-box" id="chatBox">
                 <div class="message bot">
-                    <div class="label">🤖 Assistant</div>
+                    <div class="label"> Assistant</div>
                     <span>Hello! Please upload a PDF or TXT file first, then ask me anything about it!</span>
                 </div>
             </div>
@@ -273,12 +273,12 @@
 
             if (!fileInput.files[0]) {
                 status.className = 'status error';
-                status.textContent = '❌ Please select a file first!';
+                status.textContent = ' Please select a file first!';
                 return;
             }
 
             status.className = 'status';
-            status.textContent = '⏳ Processing file...';
+            status.textContent = ' Processing file...';
             status.style.display = 'block';
 
             const formData = new FormData();
@@ -293,7 +293,7 @@
 
             if (data.error) {
                 status.className = 'status error';
-                status.textContent = '❌ ' + data.error;
+                status.textContent = ' ' + data.error;
             } else {
                 status.className = 'status success';
                 status.textContent = data.message;
@@ -318,7 +318,7 @@
             
             chatBox.innerHTML += `
                 <div class="message bot" id="thinking">
-                    <div class="label">🤖 Assistant</div>
+                    <div class="label"> Assistant</div>
                     <span class="thinking">Thinking...</span>
                 </div>
             `;
@@ -340,7 +340,7 @@
           
             chatBox.innerHTML += `
                 <div class="message bot">
-                    <div class="label">🤖 Assistant</div>
+                    <div class="label"> Assistant</div>
                     <span>${formatAnswer(data.answer || data.error)}</span>
                 </div>
             `;
