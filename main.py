@@ -109,7 +109,7 @@ def main():
     print("\n" + "=" * 50)
 
     while True:
-        print("\n💬 Ask a question about your document")
+        print("\n Ask a question about your document")
         print("   (Type 'quit' to exit)")
         question = input("\nYour question: ")
 
